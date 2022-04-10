@@ -30,6 +30,7 @@ const Login = () => {
         >
           <GoogleIcon /> Google Sign In
         </Button>
+        <small>or</small>
         <Button
           onClick={() => signInWithFacebook()}
           variant="contained"
@@ -49,6 +50,8 @@ const LoginContainer = styled.section`
     display: flex;
     flex-wrap: wrap;
     gap: 0.7rem;
+    flex-direction: column;
+    text-align: center;
   }
   button {
     display: flex;
