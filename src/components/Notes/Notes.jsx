@@ -7,13 +7,17 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
+import { signOut } from "firebase/auth";
 import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "../../App";
+import { auth } from "../Firebase/Firebase.config";
 import Note from "../Note/Note";
 const Notes = () => {
   const { user } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -21,6 +25,12 @@ const Notes = () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleLogOut = () => {
+    signOut(auth).then(() => {
+      navigate("/login");
+    });
   };
   return (
     <>
@@ -30,7 +40,7 @@ const Notes = () => {
           <div>
             <Avatar alt="Remy Sharp" src={user?.photoURL} />
 
-            <span className="cursor-pointer">
+            <span className="cursor-pointer" onClick={handleLogOut}>
               <LogoutOutlinedIcon /> LogOut
             </span>
           </div>
