@@ -203,16 +203,13 @@ const NotesContainer = styled.section`
     user-select: none;
     cursor: pointer;
     height: 280px;
-    > span {
+    & > .plus {
       width: 100px;
       height: 100px;
       text-align: center;
       line-height: 100px;
       border: 1px dashed #444;
       border-radius: 50%;
-    }
-    span.MuiTouchRipple-root.css-8je8zh-MuiTouchRipple-root {
-      display: none;
     }
   }
 `;
@@ -230,7 +227,7 @@ const CreateNote = ({ handleClickOpen }) => {
       onClick={handleClickOpen}
       className="create-notes"
     >
-      <span>+</span>
+      <span className="plus">+</span>
     </Button>
   );
 };
