@@ -45,6 +45,9 @@ const Notes = () => {
 
   const handleClose = () => {
     setOpen(false);
+    setIsUpdate(false);
+    setNotes("");
+    setNotesTitle("");
   };
 
   const handleLogOut = () => {
