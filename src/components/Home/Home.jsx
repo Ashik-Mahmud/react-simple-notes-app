@@ -6,6 +6,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
+import { Toaster } from "react-hot-toast";
 import Notes from "../Notes/Notes";
 const Home = () => {
   const actions = [
@@ -15,24 +16,27 @@ const Home = () => {
     { icon: <ShareIcon />, name: "Share" },
   ];
   return (
-    <HomeContainer>
-      <Box>
-        <SpeedDial
-          ariaLabel="SpeedDial basic example"
-          sx={{ position: "absolute", top: 500, right: 50 }}
-          icon={<SpeedDialIcon />}
-        >
-          {actions.map((action) => (
-            <SpeedDialAction
-              key={action.name}
-              icon={action.icon}
-              tooltipTitle={action.name}
-            />
-          ))}
-        </SpeedDial>
-      </Box>
-      <Notes />
-    </HomeContainer>
+    <>
+      <Toaster />
+      <HomeContainer>
+        <Box>
+          <SpeedDial
+            ariaLabel="SpeedDial basic example"
+            sx={{ position: "absolute", top: 500, right: 50 }}
+            icon={<SpeedDialIcon />}
+          >
+            {actions.map((action) => (
+              <SpeedDialAction
+                key={action.name}
+                icon={action.icon}
+                tooltipTitle={action.name}
+              />
+            ))}
+          </SpeedDial>
+        </Box>
+        <Notes />
+      </HomeContainer>
+    </>
   );
 };
 const HomeContainer = styled.section`

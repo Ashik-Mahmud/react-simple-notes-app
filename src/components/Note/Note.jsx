@@ -3,8 +3,9 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import React, { useState } from "react";
+import Skeleton from "react-loading-skeleton";
 import styled from "styled-components";
-const Note = () => {
+const Note = ({ notesTitle, notes, createdAt }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -17,16 +18,15 @@ const Note = () => {
     <>
       <NoteContainer>
         <div className="note-header">
-          <h3 className="title">Here is note title</h3>
+          <h3 className="title">{notesTitle || <Skeleton count={1} />}</h3>
         </div>
         <div className="note-body">
-          <p>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-            Exercitationem, quaerat?
-          </p>
+          <p>{notes || <Skeleton count={5} />}</p>
         </div>
         <div className="note-footer">
-          <span>23 Jan, 2022</span>
+          <span>
+            {/* {(createdAt ? createdAt || createdAt?.toDate().toDateString() : null} */}
+          </span>
 
           <div>
             <IconButton
@@ -78,6 +78,11 @@ const NoteContainer = styled.div`
     font-size: 0.9rem;
     color: #444;
     line-height: 1.6;
+    min-height: 180px;
+    overflow-y: auto;
+  }
+  .note-body::-webkit-scrollbar {
+    display: none;
   }
   .note-footer {
     border-top: 1px solid #ddd;

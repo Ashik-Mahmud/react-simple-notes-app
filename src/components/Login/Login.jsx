@@ -1,17 +1,19 @@
 import styled from "@emotion/styled";
 import GoogleIcon from "@mui/icons-material/Google";
 import { Button } from "@mui/material";
-import React from "react";
-import { useSignInWithGoogle } from "react-firebase-hooks/auth";
+import React, { useEffect } from "react";
+import { useAuthState, useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../Firebase/Firebase.config";
 const Login = () => {
   const navigate = useNavigate();
+  const [user] = useAuthState(auth);
+  useEffect(() => {
+    if (user?.uid) {
+      navigate("/home");
+    }
+  }, [user, navigate]);
   const [signInWithGoogle] = useSignInWithGoogle(auth);
-
-  if (auth.currentUser) {
-    navigate("/home");
-  }
   return (
     <LoginContainer>
       <Button
