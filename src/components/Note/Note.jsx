@@ -5,7 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 import React, { useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import styled from "styled-components";
-const Note = ({ notesTitle, notes, createdAt }) => {
+const Note = ({ deleteNotes, editNotes, notesTitle, notes, createdAt, id }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -24,9 +24,7 @@ const Note = ({ notesTitle, notes, createdAt }) => {
           <p>{notes || <Skeleton count={5} />}</p>
         </div>
         <div className="note-footer">
-          <span>
-            {/* {(createdAt ? createdAt || createdAt?.toDate().toDateString() : null} */}
-          </span>
+          <span>{createdAt?.toDate().toDateString()}</span>
 
           <div>
             <IconButton
@@ -54,8 +52,8 @@ const Note = ({ notesTitle, notes, createdAt }) => {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>Edit</MenuItem>
-              <MenuItem onClick={handleClose}>Delete</MenuItem>
+              <MenuItem onClick={() => editNotes(id)}>Edit</MenuItem>
+              <MenuItem onClick={() => deleteNotes(id)}>Delete</MenuItem>
             </Menu>
           </div>
         </div>

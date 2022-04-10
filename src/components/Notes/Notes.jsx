@@ -8,7 +8,14 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import { signOut } from "firebase/auth";
-import { addDoc, collection, Timestamp } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  Timestamp,
+  updateDoc,
+} from "firebase/firestore";
 import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
@@ -21,10 +28,12 @@ import { auth, db } from "../Firebase/Firebase.config";
 import Note from "../Note/Note";
 
 const Notes = () => {
-  const { notesData, buffer, setNotesData } = useNotes();
+  const { notesData, buffer } = useNotes();
   const { user } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [docId, setDocId] = useState(null);
   const navigate = useNavigate();
 
   const [notesTitle, setNotesTitle] = useState("");
@@ -55,24 +64,47 @@ const Notes = () => {
       author: { name: user.displayName, uid: user.uid },
       createdAt: Timestamp.now().toDate(),
       id: v4(),
-    }).then((res) => {
+    }).then(() => {
       toast.success("Notes Added Successfully.");
       handleClose();
       setLoading(false);
-      const data = [
-        ...notesData,
-        {
-          notesTitle,
-          notes,
-          author: { name: user.displayName, uid: user.uid },
-          createdAt: Timestamp.now().toDate(),
-          id: v4(),
-        },
-      ];
     });
   };
 
-  console.log(notesData);
+  /* delete notes */
+  const deleteNotes = async (id) => {
+    const deleteDocRef = doc(db, "notes", id);
+    await deleteDoc(deleteDocRef)
+      .then(() => {
+        toast.success("Notes is deleted");
+      })
+      .catch((err) => toast.error(err.message));
+  };
+
+  /* edit notes  */
+  const editNotes = (id) => {
+    setIsUpdate(true);
+    const updateNote = notesData.find((noteData) => noteData.id === id);
+    setNotesTitle(updateNote?.notesTitle);
+    setNotes(updateNote?.notes);
+    setOpen(true);
+    setDocId(id);
+  };
+
+  const handleUpdateNote = async () => {
+    const updateDocRef = doc(db, "notes", docId);
+    await updateDoc(updateDocRef, {
+      notesTitle,
+      notes,
+    }).then(() => {
+      toast.success("Notes is updated.");
+      handleClose();
+      setIsUpdate(false);
+      setNotes("");
+      setNotesTitle("");
+    });
+  };
+
   return (
     <>
       <div className="section-title">
@@ -89,11 +121,12 @@ const Notes = () => {
       </div>
       <div>
         <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>Add Note</DialogTitle>
+          <DialogTitle>{isUpdate ? "Update Notes" : "Add Notes"}</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              To add additional notes you need to fil up all the field for move
-              forward.
+              {isUpdate
+                ? "Update your notes you need to fil up all the field for move forward"
+                : "To add additional notes you need to fil up all the field for move forward"}
             </DialogContentText>
 
             <TextField
@@ -101,22 +134,26 @@ const Notes = () => {
               label="Name"
               style={{ margin: "2rem 0rem" }}
               fullWidth
+              value={notesTitle}
               onChange={(e) => setNotesTitle(e.target.value)}
             />
             <TextField
               id="demo-helper-text-misaligned-no-helper"
               label="Description"
               fullWidth
+              value={notes}
               onChange={(e) => setNotes(e.target.value)}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
             <Button
-              onClick={handleAddNote}
+              onClick={isUpdate ? handleUpdateNote : handleAddNote}
               className={`${loading && "disabled"}`}
             >
-              {!loading ? "Add Note" : "Saving Data..."}
+              {!loading
+                ? `${isUpdate ? "Update Note" : "Add Note"}`
+                : `${isUpdate ? "Updating note...." : "Saving note..."}`}
             </Button>
           </DialogActions>
         </Dialog>
@@ -125,7 +162,12 @@ const Notes = () => {
         <NotesContainer>
           <CreateNote handleClickOpen={handleClickOpen} />
           {notesData?.map((note) => (
-            <Note key={note.id} {...note} />
+            <Note
+              key={note.id}
+              editNotes={editNotes}
+              deleteNotes={deleteNotes}
+              {...note}
+            />
           ))}
         </NotesContainer>
       ) : (
@@ -157,6 +199,18 @@ const NotesContainer = styled.section`
     color: #444;
     user-select: none;
     cursor: pointer;
+    height: 280px;
+    > span {
+      width: 100px;
+      height: 100px;
+      text-align: center;
+      line-height: 100px;
+      border: 1px dashed #444;
+      border-radius: 50%;
+    }
+    span.MuiTouchRipple-root.css-8je8zh-MuiTouchRipple-root {
+      display: none;
+    }
   }
 `;
 const SkeletonContainer = styled.div`
@@ -167,8 +221,13 @@ const SkeletonContainer = styled.div`
 `;
 const CreateNote = ({ handleClickOpen }) => {
   return (
-    <Button variant="text" onClick={handleClickOpen} className="create-notes">
-      +
+    <Button
+      title="Create Brand New Notes"
+      variant="text"
+      onClick={handleClickOpen}
+      className="create-notes"
+    >
+      <span>+</span>
     </Button>
   );
 };
