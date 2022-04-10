@@ -53,11 +53,22 @@ li {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
+
 .section-title div {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+@media (max-width: 600px) {
+  .section-title {
+    text-align: center;
+    gap: 1rem;
+  }
+  .section-title div {
+    margin: auto;
+  }
 }
 .section-title div span {
   display: flex;
