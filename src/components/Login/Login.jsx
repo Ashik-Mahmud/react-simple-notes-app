@@ -21,7 +21,7 @@ const Login = () => {
         variant="contained"
         color="primary"
       >
-        <GoogleIcon /> Google
+        <GoogleIcon /> Sign In Create Notes
       </Button>
     </LoginContainer>
   );
