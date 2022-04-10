@@ -44,24 +44,17 @@ const Notes = () => {
               To add additional notes you need to fil up all the field for move
               forward.
             </DialogContentText>
+
             <TextField
-              autoFocus
-              margin="dense"
-              id="note-title"
-              label="Note Title"
-              type="text"
+              id="demo-helper-text-misaligned-no-helper"
+              label="Name"
+              style={{ margin: "2rem 0rem" }}
               fullWidth
-              variant="standard"
             />
             <TextField
-              autoFocus
-              margin="dense"
-              id="note-desc"
-              label="Note Description"
-              type="text"
+              id="demo-helper-text-misaligned-no-helper"
+              label="Description"
               fullWidth
-              height={200}
-              variant="standard"
             />
           </DialogContent>
           <DialogActions>
